@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hm_shop/pages/cart/index.dart';
+import 'package:hm_shop/pages/category/index.dart';
+import 'package:hm_shop/pages/home/index.dart';
+import 'package:hm_shop/pages/me/index.dart';
 import 'package:hm_shop/utils/hexColor.dart';
 
 class MainPage extends StatefulWidget {
@@ -36,6 +40,7 @@ class _MainPageState extends State<MainPage> {
   // 当前激活的导航栏索引
   int _currentTabIndex = 0;
 
+  // 生成底部导航的 BottomNavigationBarItem
   List<BottomNavigationBarItem> _getTabBarWidget() {
     return List.generate(_tabList.length, (index) {
       return BottomNavigationBarItem(
@@ -51,10 +56,21 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  // 生成 Body 区域的 Widget
+  List<Widget> _getChildrenForBody() {
+    return [HomeView(), CategoryView(), CartView(), MeView()];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("这是首页页面"),
+      // SafeArea 避开安全区组件
+      body: SafeArea(
+        child: IndexedStack(
+          index: _currentTabIndex, // Body 区域的激活索引
+          children: _getChildrenForBody(),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentTabIndex,
         onTap: (index) {
